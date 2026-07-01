@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Incident details, displayed as a six-step wizard.
+
+  Each step is a TitledPane that is enabled or disabled based on the
+  current incident status. Coordinators progress an incident from
+  Reported → Assessed → Assigned → Responding → Resolved → Closed by
+  expanding the current step. Sections for past steps stay expanded
+  (so context is visible) but their action controls are disabled.
+  Sections for future steps are collapsed and disabled.
+
+  Locked decision: keep dedicated screens (assign-team-view,
+  allocate-resource-view, damage-assessment-view, recovery-task-view)
+  accessible from inside the relevant wizard step via a "Open in
+  detail view" button. The wizard is the primary path; the dedicated
+  views are still available for power users.
+
+  Every fx:id used by the original IncidentDetailsController is
+  preserved so the controller's handlers continue to work.
+
+   
+-->
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="drs.client.controller.IncidentDetailsController"
+            styleClass="page-container">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" styleClass="app-header">
+            <Label text="Disaster Response System"
+                   styleClass="header-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox styleClass="header-user-info">
+                <Label fx:id="userNameLabel"
+                       styleClass="header-user-name"/>
+                <Label fx:id="userRoleLabel"
+                       styleClass="header-user-role"/>
+            </VBox>
+            <Region prefWidth="16"/>
+            <Button text="Sign out" onAction="#onSignOut"
+                    styleClass="btn-signout"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox styleClass="content-wrap">
+
+                <!-- Header strip: back button + identity + status -->
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Button text="← Back" onAction="#onBack"
+                            styleClass="btn-secondary"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label fx:id="incidentTitle" text="Incident"
+                           styleClass="hero"/>
+                    <Label fx:id="disasterTypeBadge"
+                           styleClass="badge-assigned"/>
+                    <Label fx:id="priorityBadge"
+                           styleClass="priority-high"/>
+                    <Label fx:id="statusBadge"
+                           styleClass="badge-assigned"/>
+                </HBox>
+
+                <!-- Wizard progress dots: ●●●○○○ Step 3 of 6 -->
+                <HBox spacing="6" alignment="CENTER_LEFT"
+                      styleClass="wizard-progress">
+                    <Label fx:id="step1Dot" text="●" styleClass="dot-done"/>
+                    <Label fx:id="step2Dot" text="○" styleClass="dot-pending"/>
+                    <Label fx:id="step3Dot" text="○" styleClass="dot-pending"/>
+                    <Label fx:id="step4Dot" text="○" styleClass="dot-pending"/>
+                    <Label fx:id="step5Dot" text="○" styleClass="dot-pending"/>
+                    <Label fx:id="step6Dot" text="○" styleClass="dot-pending"/>
+                    <Region prefWidth="12"/>
+                    <Label fx:id="wizardStepLabel"
+                           text="Step 1 of 6"
+                           wrapText="true"
+                           styleClass="field-helper"/>
+                </HBox>
+
+                <HBox spacing="24">
+                    <Label fx:id="reporterLabel" styleClass="field-helper"/>
+                    <Label fx:id="reportedAtLabel" styleClass="field-helper"/>
+                </HBox>
+
+                <!-- Contact phone the citizen supplied at report
+                     time. Coordinators use this for callbacks. -->
+                <Label fx:id="contactPhoneLabel"
+                       styleClass="field-helper"
+                       text="📞 Callback phone: -"/>
+
+                <!-- Assigned team panel: shows the current team and
+                     its leader once the incident has been assigned.
+                     Stays hidden for REPORTED / ASSESSED incidents,
+                     visible from ASSIGNED onward. -->
+                <HBox fx:id="assignedTeamBox" spacing="14"
+                      alignment="CENTER_LEFT"
+                      styleClass="card-soft"
+                      visible="false" managed="false">
+                    <padding>
+                        <Insets top="10" right="14" bottom="10" left="14"/>
+                    </padding>
+                    <Label text="👥" styleClass="hero"/>
+                    <VBox spacing="2">
+                        <Label fx:id="assignedTeamLabel"
+                               text="Assigned team: -"
+                               styleClass="section-heading"/>
+                        <Label fx:id="assignedLeaderLabel"
+                               text="Team leader: -"
+                               styleClass="field-helper"/>
+                    </VBox>
+                </HBox>
+
+                <!-- ============================================
+                     Step 1: Review report (always expanded once a
+                     report exists; controls are read-only)
+                     ============================================ -->
+                <TitledPane fx:id="step1Pane" text="Step 1 - Review report"
+                            expanded="true" collapsible="true"
+                            styleClass="card">
+                    <VBox spacing="10">
+                        <padding>
+                            <Insets top="12" right="14" bottom="12" left="14"/>
+                        </padding>
+
+                        <VBox spacing="4" styleClass="card-soft">
+                            <padding>
+                                <Insets top="12" right="14" bottom="12" left="14"/>
+                            </padding>
+                            <Label fx:id="locationLabel"/>
+                            <Label fx:id="peopleAffectedLabel"/>
+                            <Label fx:id="propertyRiskLabel"/>
+                        </VBox>
+
+                        <Label text="Description" styleClass="section-heading"/>
+                        <TextArea fx:id="descriptionDisplay" editable="false"
+                                  prefRowCount="4" wrapText="true"/>
+                    </VBox>
+                </TitledPane>
+
+                <!-- ============================================
+                     Step 2: Triage / CAP assessment
+                     Active when status = REPORTED
+                     ============================================ -->
+                <TitledPane fx:id="step2Pane"
+                            text="Step 2 - Triage &amp; CAP assessment"
+                            expanded="true" collapsible="true"
+                            styleClass="card">
+                    <VBox spacing="10">
+                        <padding>
+                            <Insets top="12" right="14" bottom="12" left="14"/>
+                        </padding>
+
+                        <Label text="Set severity, urgency, and certainty per the Common Alerting Protocol (CAP). The priority score is computed from these three values."
+                               styleClass="field-helper" wrapText="true"/>
+
+                        <GridPane hgap="16" vgap="8" styleClass="form-grid">
+                            <Label text="Severity" styleClass="field-helper"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <ComboBox fx:id="severityCombo"
+                                      GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                            <Label text="Urgency" styleClass="field-helper"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                            <ComboBox fx:id="urgencyCombo"
+                                      GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <Label text="Certainty" styleClass="field-helper"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                            <ComboBox fx:id="certaintyCombo"
+                                      GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        </GridPane>
+
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Button fx:id="assessButton" text="✓ Assess"
+                                    onAction="#onAssess" styleClass="btn"/>
+                            <Button fx:id="rejectButton" text="✕ Reject"
+                                    onAction="#onReject"
+                                    styleClass="btn-secondary"/>
+                        </HBox>
+                    </VBox>
+                </TitledPane>
+
+                <!-- ============================================
+                     Step 3: Assign team
+                     Active when status = ASSESSED
+                     ============================================ -->
+                <TitledPane fx:id="step3Pane"
+                            text="Step 3 - Assign team"
+                            expanded="false" collapsible="true"
+                            styleClass="card">
+                    <VBox spacing="10">
+                        <padding>
+                            <Insets top="12" right="14" bottom="12" left="14"/>
+                        </padding>
+                        <Label text="Choose primary and (optional) secondary response teams. Suggestions are ranked by Haversine distance from the incident."
+                               styleClass="field-helper" wrapText="true"/>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Button fx:id="assignTeamButton"
+                                    text="↗ Open team assignment"
+                                    onAction="#onAssignTeam"
+                                    styleClass="btn"/>
+                        </HBox>
+                    </VBox>
+                </TitledPane>
+
+                <!-- ============================================
+                     Step 4: Allocate resources
+                     Active when status = ASSIGNED or later
+                     ============================================ -->
+                <TitledPane fx:id="step4Pane"
+                            text="Step 4 - Allocate resources"
+                            expanded="false" collapsible="true"
+                            styleClass="card">
+                    <VBox spacing="10">
+                        <padding>
+                            <Insets top="12" right="14" bottom="12" left="14"/>
+                        </padding>
+                        <Label text="Commit resources (ambulances, fire engines, generators, water trucks…) to this incident. Track active allocations from the resource dashboard."
+                               styleClass="field-helper" wrapText="true"/>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Button fx:id="allocateResourceButton"
+                                    text="↗ Open resource allocation"
+                                    onAction="#onAllocateResource"
+                                    styleClass="btn"/>
+                        </HBox>
+                    </VBox>
+                </TitledPane>
+
+                <!-- ============================================
+                     Step 5: On-site progress (damage + recovery)
+                     Active when status = RESPONDING
+                     ============================================ -->
+                <TitledPane fx:id="step5Pane"
+                            text="Step 5 - On-site progress"
+                            expanded="false" collapsible="true"
+                            styleClass="card">
+                    <VBox spacing="10">
+                        <padding>
+                            <Insets top="12" right="14" bottom="12" left="14"/>
+                        </padding>
+                        <Label text="Record damage assessments and create recovery tasks while teams are on scene. Team leaders own this step."
+                               styleClass="field-helper" wrapText="true"/>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Button fx:id="damageAssessmentButton"
+                                    text="↗ Damage assessment"
+                                    onAction="#onDamageAssessment"
+                                    styleClass="btn"/>
+                            <Button fx:id="recoveryTasksButton"
+                                    text="↗ Recovery tasks"
+                                    onAction="#onRecoveryTasks"
+                                    styleClass="btn-secondary"/>
+                        </HBox>
+                    </VBox>
+                </TitledPane>
+
+                <!-- ============================================
+                     Step 6: Resolve & close
+                     Active when status = RESOLVED
+                     ============================================ -->
+                <TitledPane fx:id="step6Pane"
+                            text="Step 6 - Resolve &amp; close"
+                            expanded="false" collapsible="true"
+                            styleClass="card">
+                    <VBox spacing="10">
+                        <padding>
+                            <Insets top="12" right="14" bottom="12" left="14"/>
+                        </padding>
+                        <Label text="Final step: review the team leader's resolution note, then close the incident. Closed incidents remain in the audit trail."
+                               styleClass="field-helper" wrapText="true"/>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Button fx:id="closeButton" text="✓ Close incident"
+                                    onAction="#onClose" styleClass="btn"/>
+                        </HBox>
+                    </VBox>
+                </TitledPane>
+
+                <!-- Inline activity summary (always visible at the bottom) -->
+                <Label text="Activity" styleClass="section-heading"/>
+                <VBox spacing="6" styleClass="card">
+                    <padding>
+                        <Insets top="14" right="16" bottom="14" left="16"/>
+                    </padding>
+                    <Label fx:id="activityUpdatesLabel" text="Updates: -"/>
+                    <Label fx:id="activityAllocationsLabel"
+                           text="Resource allocations: -"/>
+                    <Label fx:id="activityAssessmentsLabel"
+                           text="Damage assessments: -"/>
+                    <Label fx:id="activityTasksLabel"
+                           text="Recovery tasks: -"/>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_LEFT" styleClass="status-bar">
+            <Label fx:id="statusLabel" styleClass="status-label"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="connectionStatusLabel" text="● Connected"
+                   styleClass="net-online"/>
+        </HBox>
+    </bottom>
+</BorderPane>

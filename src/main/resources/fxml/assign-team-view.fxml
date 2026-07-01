@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Assign team view. Presents primary + secondary team suggestions
+  ranked by Haversine distance from the incident location.
+   
+-->
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="drs.client.controller.AssignTeamController"
+            styleClass="page-container">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" styleClass="app-header">
+            <Label text="Disaster Response System"
+                   styleClass="header-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox styleClass="header-user-info">
+                <Label fx:id="userNameLabel"
+                       styleClass="header-user-name"/>
+                <Label fx:id="userRoleLabel"
+                       styleClass="header-user-role"/>
+            </VBox>
+            <Region prefWidth="16"/>
+            <Button text="Sign out" onAction="#onSignOut"
+                    styleClass="btn-signout"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox styleClass="content-wrap">
+            <HBox spacing="8">
+                <Button text="← Back" onAction="#onCancel"
+                        styleClass="btn-secondary"/>
+            </HBox>
+
+            <Label fx:id="pageTitle" text="Assign team" styleClass="hero"/>
+            <Label fx:id="incidentSummary" styleClass="lead"/>
+
+            <VBox spacing="8" styleClass="card">
+                <padding>
+                    <Insets top="16" right="16" bottom="16" left="16"/>
+                </padding>
+                <Label text="Suggested primary team" styleClass="section-heading"/>
+                <Label fx:id="suggestedPrimaryName"/>
+                <Label fx:id="primaryDistanceLabel" styleClass="field-helper"/>
+                <Label text="Why this team: closest AVAILABLE team to the incident location (Haversine ranking)."
+                       styleClass="field-helper" wrapText="true"/>
+                <Button text="✓ Confirm primary" onAction="#onConfirmPrimary"
+                        styleClass="btn"/>
+            </VBox>
+
+            <VBox spacing="8" styleClass="card">
+                <padding>
+                    <Insets top="16" right="16" bottom="16" left="16"/>
+                </padding>
+                <Label text="Suggested secondary team" styleClass="section-heading"/>
+                <Label fx:id="suggestedSecondaryName"/>
+                <Label fx:id="secondaryDistanceLabel" styleClass="field-helper"/>
+                <Label text="Why this team: second-closest AVAILABLE team from a different department for redundancy."
+                       styleClass="field-helper" wrapText="true"/>
+                <HBox spacing="8">
+                    <Button text="✓ Confirm secondary"
+                            onAction="#onConfirmSecondary" styleClass="btn"/>
+                    <Button text="Skip secondary"
+                            onAction="#onSkipSecondary"
+                            styleClass="btn-secondary"/>
+                </HBox>
+            </VBox>
+
+            <!-- Manual override.
+                 The Haversine suggestion is just a default. The
+                 coordinator may have local knowledge (a closer team
+                 is out of fuel, a particular leader is unavailable,
+                 etc.) that argues for a different team. Picking from
+                 this dropdown overrides the suggested PRIMARY team
+                 when "Assign team(s)" is clicked. -->
+            <VBox spacing="8" styleClass="card">
+                <padding>
+                    <Insets top="16" right="16" bottom="16" left="16"/>
+                </padding>
+                <Label text="Manual override - primary team only (optional)"
+                       styleClass="section-heading"/>
+                <Label text="Replace ONLY the suggested PRIMARY team with a team of your choice. The secondary team is unchanged."
+                       styleClass="field-helper" wrapText="true"/>
+                <ComboBox fx:id="overrideTeamCombo" prefWidth="380"
+                          promptText="(use suggested primary team)"/>
+                <Label fx:id="overrideHintLabel"
+                       text=""
+                       styleClass="field-helper"/>
+            </VBox>
+
+            <!-- Final assignment preview.
+                 The single source of truth for which teams will be
+                 dispatched when "Assign team(s)" is clicked. Updates
+                 live as the coordinator confirms suggestions, changes
+                 the override, or skips the secondary. -->
+            <VBox spacing="6" styleClass="card">
+                <padding>
+                    <Insets top="16" right="16" bottom="16" left="16"/>
+                </padding>
+                <Label text="Final assignment preview"
+                       styleClass="section-heading"/>
+                <Label fx:id="finalAssignmentLabel"
+                       text="Confirm a primary suggestion or pick a manual override to see the final assignment."
+                       styleClass="field-helper"
+                       wrapText="true"/>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <HBox spacing="8" alignment="CENTER_RIGHT" styleClass="button-row">
+                <Button text="Cancel" onAction="#onCancel"
+                        cancelButton="true" styleClass="btn-secondary"/>
+                <Button text="Assign team(s)" onAction="#onAssign"
+                        defaultButton="true" styleClass="btn"/>
+            </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_LEFT" styleClass="status-bar">
+            <Label fx:id="statusLabel" styleClass="status-label"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="connectionStatusLabel"
+                   text="● Connected"
+                   styleClass="net-online"/>
+        </HBox>
+    </bottom>
+</BorderPane>

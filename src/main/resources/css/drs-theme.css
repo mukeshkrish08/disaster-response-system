@@ -1,0 +1,656 @@
+/*
+ * drs-theme.css - Disaster Response System
+ * JavaFX External Stylesheet - warm gold theme
+ *
+ * Design language, palette, and visual identity by:
+ *  12314752  Mukesh Varman Dharmapuri Krishnakumar
+ *
+ * Design principles
+ *  - Warm cream canvas with a single gold accent (no rainbow palette)
+ *  - 8-point spacing scale (0, 8, 16, 24, 32, 48)
+ *  - High-contrast ink on cream for readability
+ *  - Danger / sign-out is always red outline on white (never solid red)
+ *  - Status messages: success green, warning amber, danger red, neutral grey
+ *
+ * Palette
+ *  Primary background : #FBF7EC  (warm cream canvas)
+ *  Card surface       : #FFFFFF  (paper white)
+ *  Header / Accent    : #E5B53A  (warm gold)
+ *  Accent soft        : #FFF6D6  (banner/info tint)
+ *  Accent deep        : #B8870E  (hover / pressed)
+ *  Text primary       : #1F1B12  (dark warm ink)
+ *  Text body          : #2E2A22
+ *  Text muted         : #6B6353  (labels / helpers)
+ *  Hairline border    : #E2DBC4
+ *  Success            : #1A6217  on #EAF5E5
+ *  Danger             : #8C1F00  on #FBE6DF
+ */
+
+/* ---------- Design tokens (JavaFX looked-up colors) ---------- */
+.root {
+    -drs-paper:       #FFFFFF;
+    -drs-canvas:      #FBF7EC;
+    -drs-canvas-edge: #F2EBD3;
+
+    -drs-gold:        #E5B53A;
+    -drs-gold-soft:   #FFF6D6;
+    -drs-gold-deep:   #B8870E;
+
+    -drs-ink:         #1F1B12;
+    -drs-text:        #2E2A22;
+    -drs-muted:       #6B6353;
+    -drs-line:        #E2DBC4;
+
+    -drs-success:     #1A6217;
+    -drs-success-bg:  #EAF5E5;
+    -drs-success-bdr: #B5D8A4;
+
+    -drs-danger:      #8C1F00;
+    -drs-danger-bg:   #FBE6DF;
+    -drs-danger-bdr:  #E0A38F;
+
+    -drs-warn:        #8A5C00;
+    -drs-warn-bg:     #FFF6D6;
+
+    -fx-font-family: "Segoe UI", "System", sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: -drs-canvas;
+}
+
+/* ---------- Page container (root of each scene) ---------- */
+.page-container {
+    -fx-background-color: -drs-canvas;
+    -fx-padding: 0;
+}
+
+/* Content wrapper inside BorderPane center - gives breathing room
+   on all sides and prevents content from touching the window edges. */
+.content-wrap {
+    -fx-padding: 24 32 24 32;
+    -fx-spacing: 16;
+}
+
+/* For non-BorderPane screens (login, simple forms) - same padding as
+   content-wrap so layout matches across all views. */
+.page-content {
+    -fx-padding: 24 32 24 32;
+    -fx-spacing: 16;
+}
+
+/* ---------- Header bar ---------- */
+.app-header {
+    -fx-background-color: -drs-gold;
+    -fx-padding: 16 32 16 32;
+    -fx-spacing: 12;
+    -fx-border-color: -drs-gold-deep;
+    -fx-border-width: 0 0 1 0;
+}
+
+.app-header .label {
+    -fx-text-fill: -drs-ink;
+}
+
+.header-bar {
+    -fx-background-color: -drs-gold;
+    -fx-padding: 16 32 16 32;
+    -fx-spacing: 12;
+    -fx-border-color: -drs-gold-deep;
+    -fx-border-width: 0 0 1 0;
+}
+
+.header-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -drs-ink;
+}
+
+.header-subtitle {
+    -fx-font-size: 11px;
+    -fx-text-fill: derive(-drs-ink, 30%);
+}
+
+/* ---------- Typography ---------- */
+.hero {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -drs-ink;
+}
+
+.lead {
+    -fx-font-size: 14px;
+    -fx-text-fill: -drs-muted;
+}
+
+.section-heading {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -drs-ink;
+    -fx-padding: 4 0 4 0;
+}
+
+.field-helper {
+    -fx-font-size: 11.5px;
+    -fx-text-fill: -drs-muted;
+}
+
+.field-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -drs-muted;
+}
+
+.field-error {
+    -fx-font-size: 12.5px;
+    -fx-text-fill: -drs-danger;
+    -fx-font-weight: bold;
+}
+
+.label {
+    -fx-text-fill: -drs-text;
+}
+
+/* ---------- Cards ---------- */
+.card {
+    -fx-background-color: -drs-paper;
+    -fx-border-color: -drs-line;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(180, 165, 120, 0.12), 6, 0, 0, 1);
+}
+
+/* ---------- Buttons ---------- */
+.button,
+.btn {
+    -fx-background-color: -drs-gold;
+    -fx-text-fill: -drs-ink;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 9 20 9 20;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-color: -drs-gold-deep;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+.button:hover,
+.btn:hover {
+    -fx-background-color: derive(-drs-gold, -8%);
+    -fx-border-color: -drs-gold-deep;
+}
+.button:pressed,
+.btn:pressed {
+    -fx-background-color: -drs-gold-deep;
+    -fx-text-fill: -drs-paper;
+}
+.button:focused,
+.btn:focused {
+    -fx-effect: dropshadow(gaussian, -drs-gold, 6, 0, 0, 0);
+}
+.button:disabled,
+.btn:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+.btn-secondary {
+    -fx-background-color: -drs-paper;
+    -fx-text-fill: -drs-ink;
+    -fx-border-color: -drs-line;
+    -fx-border-width: 1;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-font-weight: normal;
+    -fx-padding: 9 18 9 18;
+}
+.btn-secondary:hover {
+    -fx-background-color: -drs-canvas;
+    -fx-border-color: -drs-gold-deep;
+}
+.btn-secondary:pressed {
+    -fx-background-color: -drs-canvas-edge;
+}
+
+/* ---------- Sign-out button ----------
+   Used only on the Sign out action on every authenticated screen.
+   Red outline on white - never a solid red fill, so it doesn't
+   compete visually with the primary gold CTA buttons. */
+.btn-signout {
+    -fx-background-color: -drs-paper;
+    -fx-text-fill: -drs-danger;
+    -fx-border-color: -drs-danger;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-font-weight: bold;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+.btn-signout:hover {
+    -fx-background-color: -drs-danger-bg;
+    -fx-border-color: -drs-danger;
+}
+.btn-signout:pressed {
+    -fx-background-color: #F5D4C7;
+}
+
+/* ---------- Header user identity block ----------
+   Stacked Name + Role display, right-aligned, lives inside .app-header
+   on every authenticated dashboard. Tells the user (and the marker)
+   exactly who is logged in and in which role. */
+.header-user-info {
+    -fx-alignment: CENTER_RIGHT;
+    -fx-spacing: 0;
+    -fx-padding: 0;
+}
+
+.header-user-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -drs-ink;
+}
+
+.header-user-role {
+    -fx-font-size: 11px;
+    -fx-text-fill: derive(-drs-ink, 35%);
+    -fx-font-weight: normal;
+}
+
+/* ---------- Centered card wrapper ----------
+   Used by login + signup screens so the card sits vertically centred
+   inside the window. Apply to a BorderPane's <center> VBox.
+   The wrapper itself takes all available space; alignment="CENTER" on
+   the inner VBox keeps the card visually centred. */
+.centered-card-wrapper {
+    -fx-alignment: CENTER;
+    -fx-padding: 24;
+    -fx-spacing: 16;
+}
+
+/* ---------- Form fields ---------- */
+.text-field,
+.password-field,
+.text-area {
+    -fx-background-color: -drs-paper;
+    -fx-text-fill: -drs-ink;
+    -fx-prompt-text-fill: derive(-drs-muted, 25%);
+    -fx-border-color: -drs-line;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8 10 8 10;
+    -fx-font-size: 13px;
+}
+.text-field:focused,
+.password-field:focused,
+.text-area:focused {
+    -fx-border-color: -drs-gold;
+    -fx-effect: dropshadow(gaussian, rgba(229, 181, 58, 0.35), 5, 0, 0, 0);
+}
+
+.text-area .content {
+    -fx-background-color: -drs-paper;
+    -fx-background-radius: 5;
+}
+
+/* ---------- ComboBox ---------- */
+.combo-box,
+.choice-box {
+    -fx-background-color: -drs-paper;
+    -fx-border-color: -drs-line;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 3 6 3 6;
+    -fx-font-size: 13px;
+}
+.combo-box:focused,
+.choice-box:focused {
+    -fx-border-color: -drs-gold;
+}
+.combo-box .list-cell {
+    -fx-text-fill: -drs-ink;
+    -fx-background-color: -drs-paper;
+    -fx-padding: 5 8 5 8;
+}
+.combo-box-popup .list-view {
+    -fx-background-color: -drs-paper;
+    -fx-border-color: -drs-line;
+}
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: -drs-gold-soft;
+    -fx-text-fill: -drs-ink;
+}
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-background-color: -drs-gold;
+    -fx-text-fill: -drs-ink;
+}
+
+/* ---------- Spinner ---------- */
+.spinner {
+    -fx-background-color: -drs-paper;
+    -fx-border-color: -drs-line;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+.spinner .text-field {
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+}
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: -drs-canvas;
+}
+
+/* ---------- TableView ---------- */
+.table-view,
+.data-table {
+    -fx-background-color: -drs-paper;
+    -fx-border-color: -drs-line;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 0;
+}
+.table-view .column-header-background,
+.data-table .column-header-background {
+    -fx-background-color: -drs-gold-soft;
+    -fx-background-radius: 6 6 0 0;
+}
+.table-view .column-header,
+.data-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: -drs-line;
+    -fx-border-width: 0 1 1 0;
+    -fx-padding: 8 10 8 10;
+}
+.table-view .column-header .label,
+.data-table .column-header .label {
+    -fx-text-fill: -drs-ink;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+.table-view .table-row-cell,
+.data-table .table-row-cell {
+    -fx-background-color: -drs-paper;
+    -fx-border-color: transparent transparent -drs-line transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-text-fill: -drs-text;
+}
+.table-view .table-row-cell:odd,
+.data-table .table-row-cell:odd {
+    -fx-background-color: derive(-drs-canvas, 5%);
+}
+.table-view .table-row-cell:selected,
+.data-table .table-row-cell:selected {
+    -fx-background-color: -drs-gold-soft;
+    -fx-text-fill: -drs-ink;
+}
+.table-view .table-cell,
+.data-table .table-cell {
+    -fx-padding: 7 10 7 10;
+    -fx-border-color: transparent;
+    -fx-text-fill: -drs-text;
+}
+.table-view .placeholder .label,
+.data-table .placeholder .label {
+    -fx-text-fill: -drs-muted;
+    -fx-font-style: italic;
+}
+
+/* ---------- ListView ---------- */
+.list-view {
+    -fx-background-color: -drs-paper;
+    -fx-border-color: -drs-line;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+.list-view .list-cell {
+    -fx-background-color: -drs-paper;
+    -fx-text-fill: -drs-text;
+    -fx-padding: 8 12 8 12;
+    -fx-border-color: transparent transparent -drs-line transparent;
+    -fx-border-width: 0 0 1 0;
+}
+.list-view .list-cell:filled:selected {
+    -fx-background-color: -drs-gold-soft;
+    -fx-text-fill: -drs-ink;
+}
+.list-view .list-cell:filled:hover {
+    -fx-background-color: derive(-drs-canvas, 5%);
+}
+
+/* ---------- TabPane ---------- */
+.tab-pane {
+    -fx-background-color: -drs-canvas;
+}
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: -drs-gold-soft;
+}
+.tab-pane .tab {
+    -fx-background-color: derive(-drs-gold-soft, -5%);
+    -fx-padding: 7 18 7 18;
+}
+.tab-pane .tab .tab-label {
+    -fx-text-fill: -drs-muted;
+    -fx-font-size: 12.5px;
+}
+.tab-pane .tab:selected {
+    -fx-background-color: -drs-gold;
+}
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: -drs-ink;
+    -fx-font-weight: bold;
+}
+.tab-pane .tab:hover {
+    -fx-background-color: derive(-drs-gold-soft, -8%);
+}
+.tab-pane .tab-content-area {
+    -fx-background-color: -drs-paper;
+    -fx-border-color: -drs-line;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ---------- ScrollPane ---------- */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+.scroll-pane > .viewport {
+    -fx-background-color: -drs-canvas;
+}
+.scroll-bar {
+    -fx-background-color: -drs-canvas;
+}
+.scroll-bar .thumb {
+    -fx-background-color: derive(-drs-line, -10%);
+    -fx-background-radius: 4;
+}
+.scroll-bar .thumb:hover {
+    -fx-background-color: -drs-gold-deep;
+}
+
+/* ---------- MenuBar / ContextMenu ---------- */
+.menu-bar {
+    -fx-background-color: -drs-paper;
+    -fx-border-color: -drs-line;
+    -fx-border-width: 0 0 1 0;
+}
+.menu-bar .label {
+    -fx-text-fill: -drs-ink;
+}
+.context-menu {
+    -fx-background-color: -drs-paper;
+    -fx-border-color: -drs-line;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0, 0, 2);
+}
+
+/* ---------- Form grid ---------- */
+.form-grid {
+    -fx-padding: 8 0 8 0;
+    -fx-hgap: 16;
+    -fx-vgap: 12;
+}
+
+.button-row {
+    -fx-spacing: 8;
+    -fx-padding: 8 0 0 0;
+}
+
+/* ---------- Badges and pills ---------- */
+.badge-assigned {
+    -fx-background-color: -drs-gold-soft;
+    -fx-text-fill: -drs-warn;
+    -fx-padding: 3 10 3 10;
+    -fx-background-radius: 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-border-color: derive(-drs-gold, -10%);
+    -fx-border-radius: 12;
+}
+
+.priority-high {
+    -fx-background-color: -drs-danger-bg;
+    -fx-text-fill: -drs-danger;
+    -fx-padding: 3 10 3 10;
+    -fx-background-radius: 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-border-color: -drs-danger-bdr;
+    -fx-border-radius: 12;
+}
+
+.priority-medium {
+    -fx-background-color: -drs-gold-soft;
+    -fx-text-fill: -drs-warn;
+    -fx-padding: 3 10 3 10;
+    -fx-background-radius: 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.priority-low {
+    -fx-background-color: -drs-success-bg;
+    -fx-text-fill: -drs-success;
+    -fx-padding: 3 10 3 10;
+    -fx-background-radius: 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+/* ---------- Status bar (bottom) ---------- */
+.status-bar {
+    -fx-background-color: -drs-paper;
+    -fx-border-color: -drs-line;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 8 32 8 32;
+    -fx-spacing: 12;
+}
+
+.status-label {
+    -fx-font-size: 11.5px;
+    -fx-text-fill: -drs-muted;
+}
+
+/* Connection status indicators */
+.net-online {
+    -fx-text-fill: -drs-success;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+.net-offline {
+    -fx-text-fill: -drs-danger;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+.net-reconnecting {
+    -fx-text-fill: -drs-warn;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+/* ---------- Alert / Dialog ---------- */
+.dialog-pane {
+    -fx-background-color: -drs-paper;
+}
+.dialog-pane .header-panel {
+    -fx-background-color: -drs-gold-soft;
+}
+.dialog-pane .header-panel .label {
+    -fx-text-fill: -drs-ink;
+    -fx-font-weight: bold;
+}
+
+/* ---------- Verify chain success/fail ---------- */
+.verify-ok {
+    -fx-text-fill: -drs-success;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+.verify-fail {
+    -fx-text-fill: -drs-danger;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* ---------- Misc ---------- */
+.separator .line {
+    -fx-border-color: -drs-line;
+}
+
+/* ---------- Wizard progress (incident-details) ----------
+   Six-dot progress strip at the top of the wizard. Each dot is a
+   Label whose style class is swapped between dot-done, dot-current,
+   and dot-pending by the controller's applyWizardState() method. */
+.wizard-progress {
+    -fx-padding: 8 0 8 0;
+}
+
+.dot-done {
+    -fx-font-size: 18px;
+    -fx-text-fill: -drs-success;
+    -fx-font-weight: bold;
+}
+
+.dot-current {
+    -fx-font-size: 22px;
+    -fx-text-fill: -drs-gold-deep;
+    -fx-font-weight: bold;
+}
+
+.dot-pending {
+    -fx-font-size: 18px;
+    -fx-text-fill: derive(-drs-muted, 25%);
+}
+
+/* ---------- Soft inner card ----------
+   Used for inset summary blocks inside a wizard step. */
+.card-soft {
+    -fx-background-color: -drs-gold-soft;
+    -fx-border-color: -drs-line;
+    -fx-border-width: 1;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+}
+
+/* ---------- TitledPane (wizard sections) ----------
+   Match the warm-gold theme rather than the default JavaFX blue. */
+.titled-pane > .title {
+    -fx-background-color: -drs-gold-soft;
+    -fx-border-color: -drs-line;
+    -fx-padding: 8 12 8 12;
+}
+
+.titled-pane:focused > .title {
+    -fx-background-color: derive(-drs-gold-soft, -4%);
+}
+
+.titled-pane > .content {
+    -fx-background-color: -drs-paper;
+    -fx-border-color: -drs-line;
+    -fx-border-width: 0 1 1 1;
+}
+
+.titled-pane:disabled > .title > .text {
+    -fx-fill: derive(-drs-muted, 15%);
+}
+
+.titled-pane:disabled > .content {
+    -fx-opacity: 0.55;
+}

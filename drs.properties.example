@@ -1,0 +1,19 @@
+# Disaster Response System Configuration
+# Fill in your MySQL password below, then save this file.
+# Leave aes.key.base64 blank — the server generates it on first run.
+
+mysql.host=localhost
+mysql.port=3306
+mysql.user=root
+mysql.password=
+mysql.database=disaster_response_system
+
+server.host=localhost
+server.port=5050
+server.threadPoolSize=20
+session.timeoutMins=30
+
+priority.strategy=CAP
+dispatch.radius.km=50.0
+
+aes.key.base64=

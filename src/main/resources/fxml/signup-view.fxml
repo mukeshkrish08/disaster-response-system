@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Citizen self-registration screen.
+  Accessed from login via "Create account" button.
+  Server hardcodes role=CITIZEN regardless of request payload, so a
+  malicious client cannot register itself as a privileged user.
+   
+-->
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="drs.client.controller.SignupController"
+            styleClass="page-container">
+
+    <center>
+        <VBox styleClass="centered-card-wrapper">
+            <VBox alignment="CENTER" spacing="4">
+                <Label text="Disaster Response System" styleClass="hero"/>
+                <Label text="Create your citizen account" styleClass="lead"/>
+            </VBox>
+
+            <VBox spacing="12" maxWidth="420" styleClass="card">
+                <padding>
+                    <Insets top="24" right="24" bottom="24" left="24"/>
+                </padding>
+
+                <Label text="Citizen accounts let you report disasters in your area. Staff accounts (coordinators, team leaders, agency representatives, administrators) are created by your system administrator."
+                       styleClass="field-helper"
+                       wrapText="true"/>
+
+                <VBox spacing="4">
+                    <Label text="Full name" styleClass="field-helper"/>
+                    <TextField fx:id="fullNameField"
+                               promptText="e.g. Alex Murphy"/>
+                </VBox>
+
+                <VBox spacing="4">
+                    <Label text="Email" styleClass="field-helper"/>
+                    <TextField fx:id="emailField"
+                               promptText="you@example.com"/>
+                </VBox>
+
+                <VBox spacing="4">
+                    <Label text="Password" styleClass="field-helper"/>
+                    <PasswordField fx:id="passwordField"
+                                   promptText="At least 8 chars, mixed case + digit + symbol"/>
+                </VBox>
+
+                <VBox spacing="4">
+                    <Label text="Confirm password" styleClass="field-helper"/>
+                    <PasswordField fx:id="confirmPasswordField"
+                                   promptText="Repeat your password"/>
+                </VBox>
+
+                <Label fx:id="errorLabel"
+                       text=""
+                       styleClass="field-error"
+                       wrapText="true"/>
+
+                <Button fx:id="createAccountButton"
+                        text="Create account"
+                        defaultButton="true"
+                        maxWidth="Infinity"
+                        styleClass="btn"
+                        onAction="#onCreateAccount"/>
+
+                <HBox alignment="CENTER" spacing="6">
+                    <Label text="Already have an account?" styleClass="field-helper"/>
+                    <Button text="Back to sign in"
+                            onAction="#onBackToLogin"
+                            styleClass="btn-secondary"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_LEFT" styleClass="status-bar">
+            <Label fx:id="statusLabel" styleClass="status-label" text=""/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="connectionStatusLabel"
+                   text="● Ready"
+                   styleClass="net-online"/>
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Allocate resources (Feature 1) - multi-resource cart workflow.
+
+  The coordinator builds a list of resources to allocate (the "cart"),
+  then submits them all at once. Each cart item becomes one
+  ALLOCATE_RESOURCE request against the server; the requests run in
+  sequence so partial-success is the desired behaviour: if a competing
+  coordinator grabs one of the resources mid-loop, the items that did
+  allocate stay allocated and the coordinator can retry the failed
+  ones.
+
+   
+-->
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="drs.client.controller.AllocateResourceController"
+            styleClass="page-container">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" styleClass="app-header">
+            <Button text="← Back" onAction="#onCancel"
+                    styleClass="btn-secondary"/>
+            <Region prefWidth="16"/>
+            <Label text="Disaster Response System"
+                   styleClass="header-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox styleClass="header-user-info">
+                <Label fx:id="userNameLabel"
+                       styleClass="header-user-name"/>
+                <Label fx:id="userRoleLabel"
+                       styleClass="header-user-role"/>
+            </VBox>
+            <Region prefWidth="16"/>
+            <Button text="Sign out" onAction="#onSignOut"
+                    styleClass="btn-signout"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox spacing="14" maxWidth="900">
+                <padding>
+                    <Insets top="20" right="28" bottom="20" left="28"/>
+                </padding>
+
+            <Label text="Allocate resources" styleClass="hero"/>
+            <Label text="Add resources one at a time to the allocation list, then click Allocate all to submit them together."
+                   styleClass="lead" wrapText="true"/>
+
+            <!-- =========================================================
+                 Section 1 - Choose what to add to the allocation list
+                 ========================================================= -->
+            <VBox spacing="12" styleClass="card">
+                <padding>
+                    <Insets top="16" right="20" bottom="16" left="20"/>
+                </padding>
+
+                <Label text="1. Choose what to allocate"
+                       styleClass="section-heading"/>
+
+                <GridPane hgap="14" vgap="10" styleClass="form-grid">
+                    <Label text="Incident *" styleClass="field-label"
+                           GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <ComboBox fx:id="incidentCombo" prefWidth="420"
+                              onAction="#onIncidentChange"
+                              GridPane.columnIndex="0" GridPane.rowIndex="1"
+                              GridPane.columnSpan="2"/>
+
+                    <Label text="Resource *" styleClass="field-label"
+                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <ComboBox fx:id="resourceCombo" prefWidth="420"
+                              onAction="#onResourceChange"
+                              GridPane.columnIndex="0" GridPane.rowIndex="3"
+                              GridPane.columnSpan="2"/>
+
+                    <Label text="Available" styleClass="field-label"
+                           GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                    <Label fx:id="availableLabel" text="-"
+                           GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+
+                    <Label text="Quantity *" styleClass="field-label"
+                           GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                    <Spinner fx:id="quantitySpinner" prefWidth="140"
+                             GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                    <Label text="Notes (optional)" styleClass="field-label"
+                           GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                    <TextArea fx:id="notesArea" prefRowCount="2" wrapText="true"
+                              GridPane.columnIndex="0" GridPane.rowIndex="7"
+                              GridPane.columnSpan="2"/>
+                </GridPane>
+
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Button fx:id="addToCartButton"
+                            text="+ Add to allocation list"
+                            onAction="#onAddToCart"
+                            styleClass="btn"/>
+                    <Label fx:id="addHintLabel"
+                           text=""
+                           styleClass="field-helper"/>
+                </HBox>
+            </VBox>
+
+            <!-- =========================================================
+                 Section 2 - Allocation list (the cart)
+                 ========================================================= -->
+            <VBox spacing="10" styleClass="card">
+                <padding>
+                    <Insets top="16" right="20" bottom="16" left="20"/>
+                </padding>
+
+                <HBox spacing="14" alignment="CENTER_LEFT">
+                    <Label fx:id="cartHeadingLabel"
+                           text="2. Allocation list (0 items)"
+                           styleClass="section-heading"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="clearCartButton"
+                            text="✕ Clear all"
+                            onAction="#onClearCart"
+                            styleClass="btn-secondary"
+                            disable="true"/>
+                </HBox>
+
+                <TableView fx:id="cartTable" prefHeight="220">
+                    <columns>
+                        <TableColumn fx:id="cartResourceColumn"
+                                     text="Resource" prefWidth="280"/>
+                        <TableColumn fx:id="cartQuantityColumn"
+                                     text="Quantity" prefWidth="80"/>
+                        <TableColumn fx:id="cartNotesColumn"
+                                     text="Notes" prefWidth="280"/>
+                        <TableColumn fx:id="cartActionColumn"
+                                     text="" prefWidth="110"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <Label fx:id="statusLabel" styleClass="field-helper" wrapText="true"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox spacing="12" alignment="CENTER_RIGHT" styleClass="status-bar">
+            <padding>
+                <Insets top="12" right="28" bottom="12" left="28"/>
+            </padding>
+            <Label fx:id="connectionStatusLabel" text="● Connected"
+                   styleClass="net-online"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Cancel" onAction="#onCancel" cancelButton="true" styleClass="btn-secondary"/>
+            <Button fx:id="allocateAllButton"
+                    text="Allocate all 0 items"
+                    onAction="#onAllocate"
+                    defaultButton="true" styleClass="btn"
+                    disable="true"/>
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Add Resource form (Admin only). Feature 1.
+   
+-->
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="drs.client.controller.AddResourceController"
+            styleClass="page-container">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" styleClass="app-header">
+            <Button text="← Back" onAction="#onCancel"
+                    styleClass="btn-secondary"/>
+            <Region prefWidth="16"/>
+            <Label text="Disaster Response System"
+                   styleClass="header-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox styleClass="header-user-info">
+                <Label fx:id="userNameLabel"
+                       styleClass="header-user-name"/>
+                <Label fx:id="userRoleLabel"
+                       styleClass="header-user-role"/>
+            </VBox>
+            <Region prefWidth="16"/>
+            <Button text="Sign out" onAction="#onSignOut"
+                    styleClass="btn-signout"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="16" maxWidth="640">
+            <padding>
+                <Insets top="24" right="28" bottom="24" left="28"/>
+            </padding>
+
+            <Label text="Add resource" styleClass="hero"/>
+            <Label text="Register a new resource in the inventory."
+                   styleClass="lead"/>
+
+            <VBox spacing="12" styleClass="card">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <GridPane hgap="16" vgap="12" styleClass="form-grid">
+                    <Label text="Resource name *" styleClass="field-label"
+                           GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="nameField" prefWidth="360"
+                               promptText="e.g. Fire Truck Alpha"
+                               GridPane.columnIndex="0" GridPane.rowIndex="1"
+                               GridPane.columnSpan="2"/>
+
+                    <Label text="Type *" styleClass="field-label"
+                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <ComboBox fx:id="typeCombo" prefWidth="220"
+                              GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+
+                    <Label text="Quantity *" styleClass="field-label"
+                           GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    <Spinner fx:id="quantitySpinner" prefWidth="120"
+                             GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                    <Label text="Home location" styleClass="field-label"
+                           GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                    <ComboBox fx:id="locationCombo" prefWidth="360"
+                              GridPane.columnIndex="0" GridPane.rowIndex="5"
+                              GridPane.columnSpan="2"/>
+                </GridPane>
+
+                <HBox spacing="8" alignment="CENTER_RIGHT"
+                      styleClass="button-row">
+                    <Button text="Cancel" onAction="#onCancel"
+                            cancelButton="true" styleClass="btn-secondary"/>
+                    <Button text="Add resource" onAction="#onAdd"
+                            defaultButton="true" styleClass="btn"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_LEFT" styleClass="status-bar">
+            <Label fx:id="statusLabel" styleClass="status-label"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="connectionStatusLabel"
+                   text="● Connected"
+                   styleClass="net-online"/>
+        </HBox>
+    </bottom>
+</BorderPane>
