@@ -91,7 +91,7 @@ mvn javafx:run
 All accounts use password: `Demo@123`
 
 | Email | Role |
-|||
+|---|---|
 | mukesh@drs.local | Coordinator |
 | jordan.blake@drs.local | Team Leader |
 | taylor.morgan@drs.local | Agency Representative |
